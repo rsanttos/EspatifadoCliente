@@ -8,6 +8,8 @@ public class Musica {
 	
 	private String cantor;
 	
+	private String caminhoArquivo;
+	
 	private double preco;
 	
 	private double tamanho;
@@ -21,6 +23,16 @@ public class Musica {
 		this.id = id;
 		this.nome = nome;
 		this.cantor = cantor;
+		this.preco = preco;
+		this.tamanho = tamanho;
+	}
+	
+	public Musica(int id, String nome, String cantor, String caminhoArquivo, double preco, double tamanho) {
+		super();
+		this.id = id;
+		this.nome = nome;
+		this.cantor = cantor;
+		this.caminhoArquivo = caminhoArquivo;
 		this.preco = preco;
 		this.tamanho = tamanho;
 	}
@@ -63,6 +75,14 @@ public class Musica {
 
 	public void setTamanho(double tamanho) {
 		this.tamanho = tamanho;
+	}
+
+	public String getCaminhoArquivo() {
+		return caminhoArquivo;
+	}
+
+	public void setCaminhoArquivo(String caminhoArquivo) {
+		this.caminhoArquivo = caminhoArquivo;
 	}
 	
 }
