@@ -1,7 +1,15 @@
 package br.com.ufrn.bti.concorrente.espatifado.cliente.controle;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
@@ -11,8 +19,12 @@ import javax.faces.model.ListDataModel;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import org.primefaces.model.DefaultStreamedContent;
+import org.primefaces.model.StreamedContent;
+
 import br.com.ufrn.bti.concorrente.espatifado.cliente.dominio.Musica;
 import br.com.ufrn.bti.concorrente.espatifado.cliente.servico.MusicaService;
+import br.com.ufrn.bti.concorrente.espatifado.cliente.util.DownloadFileHandler;
 
 @ManagedBean
 @ViewScoped
@@ -58,7 +70,7 @@ public class MusicaMBean {
 
 		musicasCarrinho = new ArrayList<Musica>();
 		musicasCarrinho = populaMusicasCarrinho(musicasCarrinho);
-		
+
 		musicasCarrinho.add(musica);
 
 		FacesContext fc = FacesContext.getCurrentInstance();
@@ -88,7 +100,7 @@ public class MusicaMBean {
 		musicasCarrinho = (List<Musica>) session.getAttribute("MUSICAS_CARRINHO");
 
 		listagemCarrinho = new ListDataModel<Musica>(musicasCarrinho);
-		
+
 		return listagemCarrinho;
 	}
 
@@ -103,37 +115,81 @@ public class MusicaMBean {
 	public void setMusicasCarrinho(List<Musica> musicasCarrinho) {
 		this.musicasCarrinho = musicasCarrinho;
 	}
-	
-	public String voltarParaListagem(){
+
+	public String voltarParaListagem() {
 
 		FacesContext fc = FacesContext.getCurrentInstance();
 		HttpSession session = (HttpSession) fc.getExternalContext().getSession(false);
 		session.setAttribute("MUSICAS_CARRINHO", musicasCarrinho);
-		
-		
+
 		return "/pages/listMusicas.jsf";
 	}
-	
-	public String finalizaCompra(){
-		return null;
+
+	public String finalizaCompra() throws FileNotFoundException {
+
+		musicasCarrinho = new ArrayList<Musica>();
+		musicasCarrinho = populaMusicasCarrinho(musicasCarrinho);
+
+		List<File> arquivos = new ArrayList<File>();
+
+		for (Musica m : musicasCarrinho) {
+			File arquivo = new File(m.getCaminhoArquivo());
+			arquivos.add(arquivo);
+		}
+
+		compactaArquivos(arquivos);
+
+		File arquivo = new File("/Users/ramonsantos/bti/workspaces/concorrente_distribuida/EspatifadoFiles/musicasParaDownload.zip");
+		DownloadFileHandler.downloadFile("espatifado_download.zip", arquivo, "application/zip", FacesContext.getCurrentInstance());
+		arquivo.delete();
+
+		return "/pages/listMusicas.jsf";
 	}
-	
+
 	@SuppressWarnings("unchecked")
-	public List<Musica> populaMusicasCarrinho(List<Musica> musicas){
-		
+	public List<Musica> populaMusicasCarrinho(List<Musica> musicas) {
+
 		List<Musica> musicasAux = new ArrayList<Musica>();
-		
+
 		HttpServletRequest req = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext()
 				.getRequest();
 		HttpServletRequest request = (HttpServletRequest) req;
 		HttpSession session = (HttpSession) request.getSession();
 
 		musicasAux = (List<Musica>) session.getAttribute("MUSICAS_CARRINHO");
-		
-		if(musicasAux == null){
+
+		if (musicasAux == null) {
 			return musicas;
 		} else {
 			return musicasAux;
+		}
+	}
+
+	public void compactaArquivos(List<File> arquivos) {
+		try {
+			FileOutputStream fos = new FileOutputStream(
+					"/Users/ramonsantos/bti/workspaces/concorrente_distribuida/EspatifadoFiles/musicasParaDownload.zip");
+
+			ZipOutputStream zipOut = new ZipOutputStream(fos);
+
+			for (File arq : arquivos) {
+				zipOut.putNextEntry(new ZipEntry(arq.getName().toString()));
+
+				FileInputStream fis = new FileInputStream(arq);
+
+				int content;
+				while ((content = fis.read()) != -1) {
+					zipOut.write(content);
+				}
+
+				zipOut.closeEntry();
+
+			}
+
+			zipOut.close();
+
+		} catch (IOException e) {
+			e.printStackTrace();
 		}
 	}
 
