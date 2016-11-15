@@ -192,5 +192,13 @@ public class MusicaMBean {
 			e.printStackTrace();
 		}
 	}
+	
+	public String visualizarMusicas(){
+		return "/pages/listMusicas.jsf";
+	}
+	
+	public String visualizarCarrinho(){
+		return "/pages/carrinho.jsf";
+	}
 
 }
