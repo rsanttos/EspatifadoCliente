@@ -1,9 +1,13 @@
 package br.com.ufrn.bti.concorrente.espatifado.cliente.servico;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.json.JSONException;
+
 import br.com.ufrn.bti.concorrente.espatifado.cliente.dominio.Musica;
+import br.com.ufrn.bti.concorrente.espatifado.cliente.util.JSONProcessor;
 
 public class MusicaService {
 
@@ -11,7 +15,17 @@ public class MusicaService {
 		
 	}
 	
-	public List<Musica> populaMusicas(){
+	public List<Musica> populaMusicas(String json) throws JSONException, IOException{
+
+		List<Musica> musicas = new ArrayList<Musica>();		
+		musicas = JSONProcessor.toList(json, Musica.class);		
+		return musicas;
+		
+	}
+	
+	public List<Musica> simulaMusicas(){		
+		
+		
 		Musica m1 = new Musica(1, "m1", "c2", "/Users/ramonsantos/bti/workspaces/concorrente_distribuida/EspatifadoFiles/1.mp3", (double) Math.random() * 100, (double) Math.random() * 10000);
 		Musica m2 = new Musica(2, "m2", "c3", "/Users/ramonsantos/bti/workspaces/concorrente_distribuida/EspatifadoFiles/2.mp3", (double) Math.random() * 100, (double) Math.random() * 10000);
 		Musica m3 = new Musica(3, "m3", "c4", "/Users/ramonsantos/bti/workspaces/concorrente_distribuida/EspatifadoFiles/3.mp3", (double) Math.random() * 100, (double) Math.random() * 10000);
@@ -21,6 +35,7 @@ public class MusicaService {
 		Musica m7 = new Musica(7, "m7", "c8", "/Users/ramonsantos/bti/workspaces/concorrente_distribuida/EspatifadoFiles/7.mp3", (double) Math.random() * 100, (double) Math.random() * 10000);
 		
 		List<Musica> musicas = new ArrayList<Musica>();
+		
 		
 		musicas.add(m1);
 		musicas.add(m2);

@@ -19,12 +19,14 @@ import javax.faces.model.ListDataModel;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import org.json.JSONException;
 import org.primefaces.model.DefaultStreamedContent;
 import org.primefaces.model.StreamedContent;
 
 import br.com.ufrn.bti.concorrente.espatifado.cliente.dominio.Musica;
 import br.com.ufrn.bti.concorrente.espatifado.cliente.servico.MusicaService;
 import br.com.ufrn.bti.concorrente.espatifado.cliente.util.DownloadFileHandler;
+import br.com.ufrn.bti.concorrente.espatifado.cliente.util.JSONProcessor;
 
 @ManagedBean
 @ViewScoped
@@ -80,8 +82,11 @@ public class MusicaMBean {
 		return "/pages/carrinho.jsf";
 	}
 
-	public DataModel<Musica> getListagem() {
-		listagem = new ListDataModel<Musica>(musicaService.populaMusicas());
+	public DataModel<Musica> getListagem() throws JSONException, IOException {
+		List<Musica> musicas = musicaService.simulaMusicas();
+		String json = JSONProcessor.toJSON(musicas);
+		json = trataJson(json);
+		listagem = new ListDataModel<Musica>(musicaService.populaMusicas(json));
 		return listagem;
 	}
 
@@ -199,6 +204,19 @@ public class MusicaMBean {
 	
 	public String visualizarCarrinho(){
 		return "/pages/carrinho.jsf";
+	}
+	
+	public String trataJson(String json){
+		int tamanho = json.length();
+		String novoJson = new String();
+		if(json.charAt(0) == '\'' && json.charAt(tamanho - 1) == '\''){
+			novoJson = json;
+			novoJson = json.replace("'[", "[");
+			novoJson = novoJson.replace("]'", "]");
+			return novoJson;
+		} else {
+			return json;
+		}
 	}
 
 }

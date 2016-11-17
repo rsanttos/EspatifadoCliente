@@ -64,22 +64,21 @@
 						class="icon-bar"></span>
 				</button>
 				<a class="navbar-brand" href="index.html">Espatifado - Músicas</a>
+				<h:outputLabel value="alo alo" />
 			</div>
-
 			<div class="navbar-default sidebar" role="navigation">
 				<div class="sidebar-nav navbar-collapse">
 					<ul class="nav" id="side-menu">
 						<h:form>
-							<li class="active">
-								<h:commandLink id="musicas" immediate="true" value="Músicas" action="#{ musicaMBean.visualizarMusicas }" >
-										<i class="fa fa-files-o fa-fw"></i>
-								</h:commandLink>
-							</li>
-							<li>
-								<h:commandLink id="carrinho" immediate="true" value="Carrinho" action="#{ musicaMBean.visualizarCarrinho }" >
-										<i class="fa fa-files-o fa-fw"></i>
-								</h:commandLink>								
-							</li>
+							<li class="active"><h:commandLink id="musicas"
+									immediate="true" value="Músicas"
+									action="#{ musicaMBean.visualizarMusicas }">
+									<i class="fa fa-files-o fa-fw"></i>
+								</h:commandLink></li>
+							<li><h:commandLink id="carrinho" immediate="true"
+									value="Carrinho" action="#{ musicaMBean.visualizarCarrinho }">
+									<i class="fa fa-files-o fa-fw"></i>
+								</h:commandLink></li>
 						</h:form>
 					</ul>
 				</div>
@@ -136,12 +135,13 @@
 
 											<div align="center">
 												<h:commandLink class="btn btn-info"
-													action="#{ musicaMBean.adicionaAoCarrinho }" value="Adicionar ao carrinho">
+													action="#{ musicaMBean.adicionaAoCarrinho }"
+													value="Adicionar ao carrinho">
 												</h:commandLink>
 											</div>
 										</h:column>
 									</h:dataTable>
-								</h:form>							
+								</h:form>
 							</div>
 						</div>
 
