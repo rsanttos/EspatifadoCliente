@@ -5,7 +5,6 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.zip.ZipEntry;
@@ -20,12 +19,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.json.JSONException;
-import org.primefaces.model.DefaultStreamedContent;
-import org.primefaces.model.StreamedContent;
 
 import br.com.ufrn.bti.concorrente.espatifado.cliente.dominio.Musica;
+import br.com.ufrn.bti.concorrente.espatifado.cliente.dominio.Usuario;
 import br.com.ufrn.bti.concorrente.espatifado.cliente.servico.MusicaService;
-import br.com.ufrn.bti.concorrente.espatifado.cliente.util.DownloadFileHandler;
 import br.com.ufrn.bti.concorrente.espatifado.cliente.util.JSONProcessor;
 
 @ManagedBean
@@ -132,21 +129,23 @@ public class MusicaMBean {
 
 	public String finalizaCompra() throws FileNotFoundException {
 
-		musicasCarrinho = new ArrayList<Musica>();
-		musicasCarrinho = populaMusicasCarrinho(musicasCarrinho);
-
-		List<File> arquivos = new ArrayList<File>();
-
-		for (Musica m : musicasCarrinho) {
-			File arquivo = new File(m.getCaminhoArquivo());
-			arquivos.add(arquivo);
-		}
-
-		compactaArquivos(arquivos);
-
-		File arquivo = new File("/Users/ramonsantos/bti/workspaces/concorrente_distribuida/EspatifadoFiles/musicasParaDownload.zip");
-		DownloadFileHandler.downloadFile("espatifado_download.zip", arquivo, "application/zip", FacesContext.getCurrentInstance());
-		arquivo.delete();
+//		musicasCarrinho = new ArrayList<Musica>();
+//		musicasCarrinho = populaMusicasCarrinho(musicasCarrinho);
+//
+//		List<File> arquivos = new ArrayList<File>();
+//
+//		for (Musica m : musicasCarrinho) {
+//			File arquivo = new File(m.getCaminhoArquivo());
+//			arquivos.add(arquivo);
+//		}
+//
+//		compactaArquivos(arquivos);
+//
+//		File arquivo = new File("/Users/ramonsantos/bti/workspaces/concorrente_distribuida/EspatifadoFiles/musicasParaDownload.zip");
+//		DownloadFileHandler.downloadFile("espatifado_download.zip", arquivo, "application/zip", FacesContext.getCurrentInstance());
+//		arquivo.delete();
+		
+		
 
 		return "/pages/listMusicas.jsf";
 	}
@@ -219,4 +218,45 @@ public class MusicaMBean {
 		}
 	}
 
+	public String getMusicasCarrinhoJson(){
+		String json = new String();
+		
+		List<Musica> musicasAux = new ArrayList<Musica>();
+
+		musicasAux = populaMusicasCarrinho(musicasAux);
+		
+		json = JSONProcessor.toJSON(musicasAux);
+		json = trataJson(json);
+		
+		return json;
+	}
+	
+	public double getValorTotalCompra(){
+		List<Musica> musicasAux = new ArrayList<Musica>();
+
+		musicasAux = populaMusicasCarrinho(musicasAux);
+		
+		double valor = 0;
+		
+		if(musicasAux != null){
+			for(Musica m : musicasAux){
+				valor += m.getPreco();
+			}
+		}
+		
+		return valor;
+	}
+	
+	public Usuario getUsuarioLogado(){
+		Usuario usuarioLogado = new Usuario();
+		
+		HttpServletRequest req = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext()
+				.getRequest();
+		HttpServletRequest request = (HttpServletRequest) req;
+		HttpSession session = (HttpSession) request.getSession();
+
+		usuarioLogado = (Usuario) session.getAttribute("USUARIO_LOGADO");
+		
+		return usuarioLogado;
+	}
 }
