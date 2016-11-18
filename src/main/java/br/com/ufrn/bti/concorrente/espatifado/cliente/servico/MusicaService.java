@@ -1,11 +1,17 @@
 package br.com.ufrn.bti.concorrente.espatifado.cliente.servico;
 
 import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.json.JSONException;
 
+import br.com.ufrn.bti.concorrente.espatifado.cliente.comunicacao.MensagemRequisicao;
+import br.com.ufrn.bti.concorrente.espatifado.cliente.comunicacao.MensagemResposta;
+import br.com.ufrn.bti.concorrente.espatifado.cliente.comunicacao.TipoMensagem;
 import br.com.ufrn.bti.concorrente.espatifado.cliente.dominio.Musica;
 import br.com.ufrn.bti.concorrente.espatifado.cliente.util.JSONProcessor;
 
@@ -21,6 +27,31 @@ public class MusicaService {
 		musicas = JSONProcessor.toList(json, Musica.class);		
 		return musicas;
 		
+	}
+	
+	public String puxaMusicasDoServidor(){
+		try {
+			Socket socketServidor = new Socket("localhost", 8888);
+			
+			ObjectInputStream inputStream = new ObjectInputStream(socketServidor.getInputStream());
+			ObjectOutputStream outputStream = new ObjectOutputStream(socketServidor.getOutputStream());
+			
+			outputStream.writeObject(new MensagemRequisicao<Boolean>(TipoMensagem.LISTA_MUSICAS, true));
+			
+			MensagemResposta<String> mensagemResposta = (MensagemResposta<String>) inputStream.readObject();
+			
+			if(mensagemResposta.getTipoMensagem() != TipoMensagem.LISTA_MUSICAS_SUCESSO){
+				return null;	
+			}
+			
+			inputStream.close();
+			outputStream.close();
+			socketServidor.close();
+			
+			return mensagemResposta.getConteudo();
+		} catch (IOException | ClassNotFoundException e) {
+			return null;
+		}
 	}
 	
 	public List<Musica> simulaMusicas(){		

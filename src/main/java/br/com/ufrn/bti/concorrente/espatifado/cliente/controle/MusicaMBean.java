@@ -80,10 +80,18 @@ public class MusicaMBean {
 	}
 
 	public DataModel<Musica> getListagem() throws JSONException, IOException {
-		List<Musica> musicas = musicaService.simulaMusicas();
-		String json = JSONProcessor.toJSON(musicas);
-		json = trataJson(json);
-		listagem = new ListDataModel<Musica>(musicaService.populaMusicas(json));
+		// List<Musica> musicas = musicaService.simulaMusicas();
+		// String json = JSONProcessor.toJSON(musicas);
+		// json = trataJson(json);
+
+		String json = musicaService.puxaMusicasDoServidor();
+		
+		if(json != null){
+			listagem = new ListDataModel<Musica>(musicaService.populaMusicas(json));	
+		} else {
+			listagem = new ListDataModel<Musica>();
+		}
+		
 		return listagem;
 	}
 
@@ -129,23 +137,23 @@ public class MusicaMBean {
 
 	public String finalizaCompra() throws FileNotFoundException {
 
-//		musicasCarrinho = new ArrayList<Musica>();
-//		musicasCarrinho = populaMusicasCarrinho(musicasCarrinho);
-//
-//		List<File> arquivos = new ArrayList<File>();
-//
-//		for (Musica m : musicasCarrinho) {
-//			File arquivo = new File(m.getCaminhoArquivo());
-//			arquivos.add(arquivo);
-//		}
-//
-//		compactaArquivos(arquivos);
-//
-//		File arquivo = new File("/Users/ramonsantos/bti/workspaces/concorrente_distribuida/EspatifadoFiles/musicasParaDownload.zip");
-//		DownloadFileHandler.downloadFile("espatifado_download.zip", arquivo, "application/zip", FacesContext.getCurrentInstance());
-//		arquivo.delete();
-		
-		
+		// musicasCarrinho = new ArrayList<Musica>();
+		// musicasCarrinho = populaMusicasCarrinho(musicasCarrinho);
+		//
+		// List<File> arquivos = new ArrayList<File>();
+		//
+		// for (Musica m : musicasCarrinho) {
+		// File arquivo = new File(m.getCaminhoArquivo());
+		// arquivos.add(arquivo);
+		// }
+		//
+		// compactaArquivos(arquivos);
+		//
+		// File arquivo = new
+		// File("/Users/ramonsantos/bti/workspaces/concorrente_distribuida/EspatifadoFiles/musicasParaDownload.zip");
+		// DownloadFileHandler.downloadFile("espatifado_download.zip", arquivo,
+		// "application/zip", FacesContext.getCurrentInstance());
+		// arquivo.delete();
 
 		return "/pages/listMusicas.jsf";
 	}
@@ -196,19 +204,19 @@ public class MusicaMBean {
 			e.printStackTrace();
 		}
 	}
-	
-	public String visualizarMusicas(){
+
+	public String visualizarMusicas() {
 		return "/pages/listMusicas.jsf";
 	}
-	
-	public String visualizarCarrinho(){
+
+	public String visualizarCarrinho() {
 		return "/pages/carrinho.jsf";
 	}
-	
-	public String trataJson(String json){
+
+	public String trataJson(String json) {
 		int tamanho = json.length();
 		String novoJson = new String();
-		if(json.charAt(0) == '\'' && json.charAt(tamanho - 1) == '\''){
+		if (json.charAt(0) == '\'' && json.charAt(tamanho - 1) == '\'') {
 			novoJson = json;
 			novoJson = json.replace("'[", "[");
 			novoJson = novoJson.replace("]'", "]");
@@ -218,45 +226,45 @@ public class MusicaMBean {
 		}
 	}
 
-	public String getMusicasCarrinhoJson(){
+	public String getMusicasCarrinhoJson() {
 		String json = new String();
-		
+
 		List<Musica> musicasAux = new ArrayList<Musica>();
 
 		musicasAux = populaMusicasCarrinho(musicasAux);
-		
+
 		json = JSONProcessor.toJSON(musicasAux);
 		json = trataJson(json);
-		
+
 		return json;
 	}
-	
-	public double getValorTotalCompra(){
+
+	public double getValorTotalCompra() {
 		List<Musica> musicasAux = new ArrayList<Musica>();
 
 		musicasAux = populaMusicasCarrinho(musicasAux);
-		
+
 		double valor = 0;
-		
-		if(musicasAux != null){
-			for(Musica m : musicasAux){
+
+		if (musicasAux != null) {
+			for (Musica m : musicasAux) {
 				valor += m.getPreco();
 			}
 		}
-		
+
 		return valor;
 	}
-	
-	public Usuario getUsuarioLogado(){
+
+	public Usuario getUsuarioLogado() {
 		Usuario usuarioLogado = new Usuario();
-		
+
 		HttpServletRequest req = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext()
 				.getRequest();
 		HttpServletRequest request = (HttpServletRequest) req;
 		HttpSession session = (HttpSession) request.getSession();
 
 		usuarioLogado = (Usuario) session.getAttribute("USUARIO_LOGADO");
-		
+
 		return usuarioLogado;
 	}
 }
