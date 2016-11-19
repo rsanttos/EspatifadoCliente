@@ -136,7 +136,8 @@ public class MusicaMBean {
 	}
 
 	public String finalizaCompra() throws FileNotFoundException {
-
+		
+		
 		// musicasCarrinho = new ArrayList<Musica>();
 		// musicasCarrinho = populaMusicasCarrinho(musicasCarrinho);
 		//
