@@ -1,5 +1,7 @@
 package br.com.ufrn.bti.concorrente.espatifado.cliente.dominio;
 
+import java.io.Serializable;
+
 /**
  * 
  */
@@ -9,9 +11,14 @@ import java.util.Date;
 import org.dom4j.tree.AbstractEntity;
 
 
-public class Pessoa extends AbstractEntity{
+public class Pessoa extends AbstractEntity implements Serializable {
 
-	private static final long serialVersionUID = 1L;
+	
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 5950037841442058299L;
 
 	/**
 	 * ID da entidade

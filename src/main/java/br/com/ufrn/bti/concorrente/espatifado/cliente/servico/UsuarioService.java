@@ -18,7 +18,7 @@ public class UsuarioService {
 	
 	public boolean efetuarLogin(Usuario usuario){
 		try {
-			Socket socketServidor = new Socket("localhost", 8888);
+			Socket socketServidor = new Socket("localhost", 40123);
 			
 			ObjectInputStream inputStream = new ObjectInputStream(socketServidor.getInputStream());
 			ObjectOutputStream outputStream = new ObjectOutputStream(socketServidor.getOutputStream());
@@ -33,6 +33,7 @@ public class UsuarioService {
 			
 			return mensagemResposta.isSucesso();
 		} catch (IOException | ClassNotFoundException e) {
+			e.printStackTrace();
 			return false;
 		}
 	}

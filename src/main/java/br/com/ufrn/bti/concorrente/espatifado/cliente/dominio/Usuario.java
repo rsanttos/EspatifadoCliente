@@ -1,7 +1,14 @@
 package br.com.ufrn.bti.concorrente.espatifado.cliente.dominio;
 
-public class Usuario {
+import java.io.Serializable;
+
+public class Usuario implements Serializable {
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -5846796897460964406L;
+
 	private int id;
 	
 	private String login;

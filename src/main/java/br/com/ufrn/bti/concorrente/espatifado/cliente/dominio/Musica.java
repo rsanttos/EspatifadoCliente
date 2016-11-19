@@ -1,6 +1,13 @@
 package br.com.ufrn.bti.concorrente.espatifado.cliente.dominio;
 
-public class Musica {
+import java.io.Serializable;
+
+public class Musica implements Serializable {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -6927402813202455674L;
 
 	private int id;
 	
