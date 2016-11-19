@@ -27,4 +27,8 @@ public class UsuarioMBean {
 			return "/pages/login.jsf";	
 		}
 	}
+	
+	public String login(){
+		return "/pages/login.jsf";
+	}
 }
