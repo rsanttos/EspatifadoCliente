@@ -1,4 +1,4 @@
-package br.com.ufrn.bti.concorrente.espatifado.cliente.util;
+package br.com.ufrn.bti.util;
 
 import java.io.FileWriter;
 import java.io.IOException;

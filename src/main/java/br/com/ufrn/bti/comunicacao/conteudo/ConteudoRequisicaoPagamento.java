@@ -1,8 +1,8 @@
-package br.com.ufrn.bti.concorrente.espatifado.cliente.comunicacao.conteudo;
+package br.com.ufrn.bti.comunicacao.conteudo;
 
 import java.io.Serializable;
 
-import br.com.ufrn.bti.concorrente.espatifado.cliente.dominio.Pessoa;
+import br.com.ufrn.bti.dominio.Usuario;
 
 public class ConteudoRequisicaoPagamento implements Serializable {
 	
@@ -10,10 +10,10 @@ public class ConteudoRequisicaoPagamento implements Serializable {
 	 * 
 	 */
 	private static final long serialVersionUID = 8067702631588115629L;
-	private Pessoa pessoa;
+	private Usuario pessoa;
 	private double valorPagamento;
 
-	public ConteudoRequisicaoPagamento(Pessoa pessoa, double valorPagamento) {
+	public ConteudoRequisicaoPagamento(Usuario pessoa, double valorPagamento) {
 		this.pessoa = pessoa;
 		this.valorPagamento = valorPagamento;
 	}
@@ -22,11 +22,11 @@ public class ConteudoRequisicaoPagamento implements Serializable {
 		// TODO Auto-generated constructor stub
 	}
 
-	public Pessoa getPessoa() {
+	public Usuario getUsuario() {
 		return pessoa;
 	}
 
-	public void setPessoa(Pessoa pessoa) {
+	public void setUsuario(Usuario pessoa) {
 		this.pessoa = pessoa;
 	}
 

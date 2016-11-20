@@ -1,6 +1,8 @@
-package br.com.ufrn.bti.concorrente.espatifado.cliente.comunicacao;
+package br.com.ufrn.bti.comunicacao;
 
-public class MensagemResposta<T> extends AbstractMensagem<T> {
+import java.io.Serializable;
+
+public class MensagemResposta<T> extends AbstractMensagem<T> implements Serializable {
 
 	public MensagemResposta(TipoMensagem tipoMensagem, T conteudo, boolean sucesso) {
 		super(tipoMensagem, conteudo);

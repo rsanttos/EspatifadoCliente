@@ -1,4 +1,4 @@
-package br.com.ufrn.bti.concorrente.espatifado.cliente.comunicacao;
+package br.com.ufrn.bti.comunicacao;
 
 public enum TipoMensagem {
 	

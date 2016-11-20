@@ -1,4 +1,4 @@
-package br.com.ufrn.bti.concorrente.espatifado.cliente.controle;
+package br.com.ufrn.bti.controle;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -20,10 +20,11 @@ import javax.servlet.http.HttpSession;
 
 import org.json.JSONException;
 
-import br.com.ufrn.bti.concorrente.espatifado.cliente.dominio.Musica;
-import br.com.ufrn.bti.concorrente.espatifado.cliente.dominio.Usuario;
-import br.com.ufrn.bti.concorrente.espatifado.cliente.servico.MusicaService;
-import br.com.ufrn.bti.concorrente.espatifado.cliente.util.JSONProcessor;
+import br.com.ufrn.bti.dominio.Musica;
+import br.com.ufrn.bti.dominio.Usuario;
+import br.com.ufrn.bti.servico.MusicaService;
+import br.com.ufrn.bti.util.DownloadFileHandler;
+import br.com.ufrn.bti.util.JSONProcessor;
 
 @ManagedBean
 @ViewScoped
@@ -85,13 +86,15 @@ public class MusicaMBean {
 		// json = trataJson(json);
 
 		String json = musicaService.puxaMusicasDoServidor();
-		
-		if(json != null){
-			listagem = new ListDataModel<Musica>(musicaService.populaMusicas(json));	
+
+		json = trataJson(json);
+
+		if (json != null) {
+			listagem = new ListDataModel<Musica>(musicaService.populaMusicas(json));
 		} else {
 			listagem = new ListDataModel<Musica>();
 		}
-		
+
 		return listagem;
 	}
 
@@ -136,27 +139,42 @@ public class MusicaMBean {
 	}
 
 	public String finalizaCompra() throws FileNotFoundException {
-		
-		
-		// musicasCarrinho = new ArrayList<Musica>();
-		// musicasCarrinho = populaMusicasCarrinho(musicasCarrinho);
-		//
-		// List<File> arquivos = new ArrayList<File>();
-		//
-		// for (Musica m : musicasCarrinho) {
-		// File arquivo = new File(m.getCaminhoArquivo());
-		// arquivos.add(arquivo);
-		// }
-		//
-		// compactaArquivos(arquivos);
-		//
-		// File arquivo = new
-		// File("/Users/ramonsantos/bti/workspaces/concorrente_distribuida/EspatifadoFiles/musicasParaDownload.zip");
-		// DownloadFileHandler.downloadFile("espatifado_download.zip", arquivo,
-		// "application/zip", FacesContext.getCurrentInstance());
-		// arquivo.delete();
+		double valorPagamento = getValorTotalCompra();
 
-		return "/pages/listMusicas.jsf";
+		Usuario usuarioLogado = new Usuario();
+
+		usuarioLogado = getUsuarioLogado();
+
+		if (musicaService.efetuaPagamentoMusicas(usuarioLogado, valorPagamento)) {
+			musicasCarrinho = new ArrayList<Musica>();
+			musicasCarrinho = populaMusicasCarrinho(musicasCarrinho);
+
+			if(musicasCarrinho.size() > 1){
+				List<File> arquivos = new ArrayList<File>();
+
+				for (Musica m : musicasCarrinho) {
+					File arquivo = new File(m.getCaminhoArquivoCliente());
+					arquivos.add(arquivo);
+				}
+
+				compactaArquivos(arquivos);
+
+				File arquivo = new File(
+						"/home/inacio-medeiros/Music/cliente/musicasParaDownload.zip");
+				DownloadFileHandler.downloadFile("espatifado_download.zip", arquivo, "application/zip",
+						FacesContext.getCurrentInstance());
+				arquivo.delete();	
+			} else {
+				File arquivo = new File(musicasCarrinho.get(0).getCaminhoArquivoCliente());
+				DownloadFileHandler.downloadFile(musicasCarrinho.get(0).getNome() + ".mp3", arquivo, "audio/mpeg3",
+						FacesContext.getCurrentInstance());
+			}
+
+			return "/pages/listMusicas.jsf";
+		} else {
+			return null;
+		}
+
 	}
 
 	@SuppressWarnings("unchecked")
@@ -181,7 +199,7 @@ public class MusicaMBean {
 	public void compactaArquivos(List<File> arquivos) {
 		try {
 			FileOutputStream fos = new FileOutputStream(
-					"/Users/ramonsantos/bti/workspaces/concorrente_distribuida/EspatifadoFiles/musicasParaDownload.zip");
+					"/home/inacio-medeiros/Music/cliente/musicasParaDownload.zip");
 
 			ZipOutputStream zipOut = new ZipOutputStream(fos);
 

@@ -1,4 +1,4 @@
-package br.com.ufrn.bti.concorrente.espatifado.cliente.dominio;
+package br.com.ufrn.bti.dominio;
 
 import java.io.Serializable;
 
@@ -11,25 +11,23 @@ import java.util.Date;
 import org.dom4j.tree.AbstractEntity;
 
 
-public class Pessoa extends AbstractEntity implements Serializable {
+public class Pessoa extends AbstractEntity implements Serializable{
 
-	
-
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 5950037841442058299L;
+	private static final long serialVersionUID = 1L;
 
 	/**
 	 * ID da entidade
 	 */
+	
 	private int id;
+	
 	
 	private String nome;
 	
+	
 	private String cpf;
 	
-
+	
 	private Date dataNascimento;
 	
 	/**
@@ -48,10 +46,13 @@ public class Pessoa extends AbstractEntity implements Serializable {
 	 * TRUE  = ativo
 	 * FALSE = inativo
 	 */
+	
+	
 	private boolean ativo;
 	/**
 	 * Cidade e Estado da pessoa
 	 */
+	
 	private String cidadeEstado;
 	
 	
