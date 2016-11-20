@@ -12,14 +12,14 @@ public class UsuarioMBean {
 	
 	private UsuarioService servicoUsuario;
 	
+	private Usuario usuario;
+	
 	public UsuarioMBean(){
+		this.usuario = new Usuario();
 		this.servicoUsuario = new UsuarioService();
 	}
 	
 	public String realizarLogin(){
-		Usuario usuario = new Usuario();
-		usuario.setLogin("boyinacio");
-		usuario.setSenha("123");
 		
 		if(this.servicoUsuario.efetuarLogin(usuario)){
 			return "/pages/listMusicas.jsf";	
@@ -31,4 +31,21 @@ public class UsuarioMBean {
 	public String login(){
 		return "/pages/login.jsf";
 	}
+
+	public UsuarioService getServicoUsuario() {
+		return servicoUsuario;
+	}
+
+	public void setServicoUsuario(UsuarioService servicoUsuario) {
+		this.servicoUsuario = servicoUsuario;
+	}
+
+	public Usuario getUsuario() {
+		return usuario;
+	}
+
+	public void setUsuario(Usuario usuario) {
+		this.usuario = usuario;
+	}
+	
 }
